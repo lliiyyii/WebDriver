@@ -97,14 +97,52 @@ public class search {
         //获得职位的url
         for(WebElement s:joburl){  
         	try{
-        	urllist.add(s.getAttribute("href"));        	}
+//        		urllist.add(s.getAttribute("href"));   
+        		String page = s.getAttribute("href");
+        		driver.navigate().to(page);
+            	//url
+            	msg.setUrl(page);
+            	//标题
+            	try{
+            	if(WaitElement.isElementExsit(driver, By.xpath(".//*[@id='J_topHeader']/h2"))==true);
+            	{msg.setJobname(driver.findElement(By.xpath(".//*[@id='J_topHeader']/h2")).getText());
+            	System.out.println(msg.getJobname());}}
+            	catch(Exception e)
+            	{
+            		msg.setJobname(null);
+            		log.warn("找不到标题  "+e.getMessage());
+            	}
+            	//内容
+            /*	try{
+//            	if(WaitElement.isElementExsit(driver, By.className("pro-detail"))==true);
+            	String content = driver.findElement(By.className("pro-detail")).getText();
+            	msg.setContent(content);
+            	 WaitElement.holdon(1);
+            	}
+            	catch(Exception e)
+            	{
+            		msg.setContent(null);
+            		log.warn("找不到内容  "+e.getMessage());
+            	}*/
+            	 jobname.add(msg);
+            	 
+             	if (jobname.size() > 0) 
+     		{
+     			try {SaveDatabase.save(jobname);}
+     			catch (SQLException e) {
+     				  System.out.println("数据库"+e.getMessage());
+     			  } 
+     			jobname.clear();
+             }
+        		
+        	}
         	catch(Exception e){
         		log.warn("获得信息 "+e.getMessage());
         	}
         	 
       }
         //获取内容
-       while(urllist.size()>0)
+  /*     while(urllist.size()>0)
         
         {
         	String page = urllist.pollFirst();
@@ -115,7 +153,9 @@ public class search {
         	try{
         	if(WaitElement.isElementExsit(condriver, By.xpath(".//*[@id='J_topHeader']/h2"))==true);
         	{msg.setJobname(condriver.findElement(By.xpath(".//*[@id='J_topHeader']/h2")).getText());
-        	System.out.println(msg.getJobname());}}
+        	System.out.println(msg.getJobname());
+        	
+        	}}
         	catch(Exception e)
         	{
         		msg.setJobname(null);
@@ -145,7 +185,7 @@ public class search {
 			jobname.clear();
         }
         
-        }
+        }*/
         
        if(i!=maxpage)//点击下一页
        {
